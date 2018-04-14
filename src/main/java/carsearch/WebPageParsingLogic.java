@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,24 +25,30 @@ public class WebPageParsingLogic {
     WebPageParsingLogic() {
         driver = new ChromeDriver();
         driver.get("https://auto.ria.com/");
+        WebElement adBanner = driver.findElement(By.cssSelector("a.close.unlink"));
+        adBanner.click();
         WebElement advansedSearch = driver.findElement(By.cssSelector("a.ext-end"));
         advansedSearch.click();
     }
 
     public void init(ArrayList<Brand> carMark, ArrayList<FuelType> fuelType, ArrayList<BodyType> bodyTypes) {
+        setBodyType(bodyTypes);
         setMark(carMark);
         setFuelType(fuelType);
-        setBodyType(bodyTypes);
         WebElement element = driver.findElement(By.className("button.middle"));
         element.click();
         analiseData();
     }
 
     private void setMark(ArrayList<Brand> carMark) {
+        WebElement markInputField = driver.findElement(By.id("brandAutoComplete"));
+
+        //Cancer code here
+        markInputField.sendKeys("BMW");
         for (Brand mark :
                 carMark) {
             // Here compiler give an exception - org.openqa.selenium.NoSuchElementException: Unable to locate element with ID: brand-16
-            WebElement element = driver.findElement(By.id(mark.getName()));
+            WebElement element = driver.findElement(By.cssSelector("li.rubric.bold[title='BMW']"));
             element.click();
         }
     }
@@ -56,9 +61,13 @@ public class WebPageParsingLogic {
     }
 
     private void setBodyType(ArrayList<BodyType> bodyTypes) {
+        WebElement expandSection = driver.findElement(By.cssSelector("a.el-selected.open"));
+        expandSection.click();
         for (BodyType type :
                 bodyTypes) {
-            WebElement element = driver.findElement(By.id(type.getId()));
+
+            //TODO: Remove this static shit. Make changes in enum-BodyType, replace id's by prepared selectors
+            WebElement element = driver.findElement(By.cssSelector("i.icon-typecar-bu-kabriolet"));
             element.click();
         }
     }
