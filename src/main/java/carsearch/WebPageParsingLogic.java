@@ -6,18 +6,25 @@ import carsearch.enums.typeOfCar.Brand;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class WebPageParsingLogic {
 
+    static {
+        System.out.println(new File(".").getAbsoluteFile());
+        System.setProperty("webdriver.chrome.driver", ".\\src\\main\\resources\\chromedriver.exe");
+    }
+
     private WebDriver driver;
 
     WebPageParsingLogic() {
-        driver = new HtmlUnitDriver();
+        driver = new ChromeDriver();
         driver.get("https://auto.ria.com/");
         WebElement advansedSearch = driver.findElement(By.cssSelector("a.ext-end"));
         advansedSearch.click();
@@ -42,12 +49,10 @@ public class WebPageParsingLogic {
     }
 
     private void setFuelType(ArrayList<FuelType> fuelType) {
-        for (FuelType type :
-                fuelType) {
+        for (FuelType type : fuelType) {
             WebElement element = driver.findElement(By.id(type.getType()));
             element.click();
         }
-
     }
 
     private void setBodyType(ArrayList<BodyType> bodyTypes) {
@@ -69,8 +74,7 @@ public class WebPageParsingLogic {
                 carsRaw) {
             Car car = new Car();
             car.setHeader(element.findElement(By.className("item.ticket-title")).getAttribute("title"));
-            String carPrice = element.findElement(By.className("price-ticket")).getAttribute("data-main-price") + " " +
-                    element.findElement(By.className("price-ticket")).getAttribute("data-main-currency");
+            String carPrice = element.findElement(By.className("price-ticket")).getAttribute("data-main-price") + " " + element.findElement(By.className("price-ticket")).getAttribute("data-main-currency");
             car.setPrice(carPrice);
             car.setDetails(element.findElement(By.className("unstyle characteristic")).getText());
             car.setComment(element.findElement(By.className("descriptions-ticket")).getText());
@@ -85,8 +89,7 @@ public class WebPageParsingLogic {
     }
 
     private void printData(List<Car> carList) {
-        for (Car c :
-                carList) {
+        for (Car c : carList) {
             System.out.println(c.toString());
         }
     }
