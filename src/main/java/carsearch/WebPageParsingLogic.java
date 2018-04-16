@@ -4,13 +4,10 @@ import carsearch.enums.specifications.FuelType;
 import carsearch.enums.typeOfCar.BodyType;
 import carsearch.enums.typeOfCar.Brand;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +35,7 @@ public class WebPageParsingLogic {
         setBodyType(bodyTypes);
         setMark(carMark);
         setFuelType(fuelType);
-        WebElement element = driver.findElement(By.className("button.middle"));
+        WebElement element = driver.findElement(By.cssSelector("button.button.middle"));
         element.click();
         analiseData();
     }
@@ -57,13 +54,10 @@ public class WebPageParsingLogic {
     }
 
     private void setFuelType(ArrayList<FuelType> fuelType) {
+        WebElement conyainer = driver.findElement(By.id("engineBlock"));
         for (FuelType type : fuelType) {
-            WebElement element = driver.findElement(By.id(type.getType()));
 
-            //Scroll to fuel section
-            JavascriptExecutor jse = (JavascriptExecutor)driver;
-            jse.executeScript("scroll(0, 2000);");
-
+            WebElement element = conyainer.findElement(By.cssSelector("label.radio-btn[for='" + type.getType() + "']"));
             element.click();
         }
     }
@@ -82,7 +76,7 @@ public class WebPageParsingLogic {
 
     private void analiseData() {
         ArrayList<WebElement> carsRaw = getAllCarsOnPage();
-        WebElement goToNextPageButn = driver.findElement(By.className("page-link.js-next"));
+        WebElement goToNextPageButn = driver.findElement(By.cssSelector("a.page-link js-next"));
         while (goToNextPageButn.isEnabled()) {
             carsRaw.addAll(getAllCarsOnPage());
         }
