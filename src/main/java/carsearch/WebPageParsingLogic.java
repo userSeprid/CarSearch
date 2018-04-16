@@ -4,10 +4,13 @@ import carsearch.enums.specifications.FuelType;
 import carsearch.enums.typeOfCar.BodyType;
 import carsearch.enums.typeOfCar.Brand;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +59,11 @@ public class WebPageParsingLogic {
     private void setFuelType(ArrayList<FuelType> fuelType) {
         for (FuelType type : fuelType) {
             WebElement element = driver.findElement(By.id(type.getType()));
+
+            //Scroll to fuel section
+            JavascriptExecutor jse = (JavascriptExecutor)driver;
+            jse.executeScript("scroll(0, 2000);");
+
             element.click();
         }
     }
