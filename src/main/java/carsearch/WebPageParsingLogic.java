@@ -76,26 +76,32 @@ public class WebPageParsingLogic {
 
     private void analiseData() {
         ArrayList<WebElement> carsRaw = getAllCarsOnPage();
-        WebElement goToNextPageButn = driver.findElement(By.cssSelector("a.page-link js-next"));
-        while (goToNextPageButn.isEnabled()) {
-            carsRaw.addAll(getAllCarsOnPage());
-        }
+        WebElement goToNextPageButn = driver.findElement(By.cssSelector("a.page-link.js-next.disabled"));
+        System.out.println(goToNextPageButn.getLocation().getX() + " " + goToNextPageButn.getLocation().getY());
+
+        //TODO: make possible to go on next page (if available)
+
         ArrayList<Car> cars = new ArrayList<>();
         for (WebElement element :
                 carsRaw) {
             Car car = new Car();
-            car.setHeader(element.findElement(By.className("item.ticket-title")).getAttribute("title"));
+
+            //TODO: sometimes setter not set proper value. Need fix
+            car.setHeader(element.findElement(By.cssSelector("div.item.ticket-title")).getAttribute("title"));
             String carPrice = element.findElement(By.className("price-ticket")).getAttribute("data-main-price") + " " + element.findElement(By.className("price-ticket")).getAttribute("data-main-currency");
             car.setPrice(carPrice);
-            car.setDetails(element.findElement(By.className("unstyle characteristic")).getText());
-            car.setComment(element.findElement(By.className("descriptions-ticket")).getText());
+            car.setDetails(element.findElement(By.cssSelector("ul.unstyle.characteristic")).getText());
+            //car.setComment(element.findElement(By.cssSelector("p.descriptions-ticket.show-desc")).getText());
+            car.setComment("Degf");
+            cars.add(car);
         }
-
+        printData(cars);
     }
 
     private ArrayList<WebElement> getAllCarsOnPage() {
-        ArrayList<WebElement> cars = (ArrayList<WebElement>) driver.findElements(By.className("ticket-item.new__ticket.t.paid"));
-        cars.add(driver.findElement(By.id("newautoInformerTop")));
+        ArrayList<WebElement> cars = (ArrayList<WebElement>) driver.findElements(By.cssSelector("section.ticket-item.new__ticket.t.paid"));
+        cars.add(driver.findElement(By.cssSelector("div#newautoInformerTop.box-panel.newauto-rotator-top-carousel.newauto-rotator-top-search")));
+        cars.addAll(driver.findElements(By.cssSelector("section.ticket-item.new__ticket.t")));
         return cars;
     }
 
