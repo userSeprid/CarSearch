@@ -15,6 +15,21 @@ import java.util.List;
 
 public class WebPageParsingLogic {
 
+    public enum Test {
+
+        BANNER("a.close.unlink");
+
+        private String selector;
+
+        Test(String selector) {
+            this.selector = selector;
+        }
+
+        WebElement find() {
+            return WebPageParsingLogic.this.driver.findElement(By.cssSelector(this.selector));
+        }
+    }
+
     static {
         System.out.println(new File(".").getAbsoluteFile());
         System.setProperty("webdriver.chrome.driver", ".\\src\\main\\resources\\chromedriver.exe");
@@ -25,7 +40,7 @@ public class WebPageParsingLogic {
     WebPageParsingLogic() {
         driver = new ChromeDriver();
         driver.get("https://auto.ria.com/");
-        WebElement adBanner = driver.findElement(By.cssSelector("a.close.unlink"));
+        WebElement adBanner = Test.BANNER.find();
         adBanner.click();
         WebElement advansedSearch = driver.findElement(By.cssSelector("a.ext-end"));
         advansedSearch.click();
