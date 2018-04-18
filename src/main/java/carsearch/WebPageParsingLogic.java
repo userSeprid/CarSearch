@@ -17,7 +17,7 @@ public class WebPageParsingLogic {
 
     public enum Test {
 
-        BANNER("a.close.unlink");
+        BANNER("css:a.close.unlink");
 
         private String selector;
 
@@ -25,8 +25,12 @@ public class WebPageParsingLogic {
             this.selector = selector;
         }
 
-        WebElement find() {
-            return WebPageParsingLogic.this.driver.findElement(By.cssSelector(this.selector));
+        WebElement find(WebDriver driver) {
+            String[] paths = this.selector.split(":");
+            switch (paths[0]) {
+                case "css:":
+                    return driver.findElement(By.cssSelector(this.selector));
+            }
         }
     }
 
